@@ -2,7 +2,7 @@
 /**
  * @package WordPress
  * @subpackage Timberland
- * @since Timberland 2.0.1
+ * @since Timberland 2.1.0
  */
 
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
@@ -62,6 +62,7 @@ class Timberland extends Timber\Site {
 		wp_dequeue_style( 'wp-block-library-theme' );
 		wp_dequeue_style( 'wc-block-style' );
 		wp_dequeue_script( 'jquery' );
+		wp_dequeue_style( 'global-styles' );
 
 		$vite_env = 'production';
 
@@ -73,7 +74,7 @@ class Timberland extends Timber\Site {
 		$dist_uri  = get_template_directory_uri() . '/assets/dist';
 		$dist_path = get_template_directory() . '/assets/dist';
 		$manifest  = null;
-		
+
 		if ( file_exists( $dist_path . '/.vite/manifest.json' ) ) {
 			$manifest = json_decode( file_get_contents( $dist_path . '/.vite/manifest.json' ), true );
 		}
@@ -148,7 +149,8 @@ function acf_block_render_callback( $block, $content ) {
 	$context['post']   = Timber::get_post();
 	$context['block']  = $block;
 	$context['fields'] = get_fields();
-	$template          = $block['path'] . '/index.twig';
+    $block_name        = explode( '/', $block['name'] )[1];
+    $template          = 'blocks/'. $block_name . '/index.twig';
 
 	Timber::render( $template, $context );
 }
